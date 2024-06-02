@@ -4,10 +4,14 @@ const port = 8080
 const passport = require('passport')
 const { jwtStrategy } = require('./Config/passport')
 const router = require('./Routes/router')()
-app.use(passport.initialize({}))
-  passport.use('jwt', jwtStrategy)
+
+app.use(express.json());
+// app.use(passport.initialize({}))
+//   passport.use('jwt', jwtStrategy)
 app.use('/', router)
+
 app.use((err,req,res,next)=>{
+  console.log(err)
   err.statusCode=err.statusCode||500;
   const handleError=err.statusCode<500?err.message:"SomeThing Went Wrong";
 

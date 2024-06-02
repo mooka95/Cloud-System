@@ -1,6 +1,7 @@
 const User=require('../Models/User');
 const database=require('../db');
-const usersQuery=require('../Queries/user.queries')
+const usersQuery=require('../Queries/user.queries');
+const AppError = require("../Utils/AppError")
 
 async function registerUser(req, res, next) {
   try{
@@ -22,14 +23,19 @@ const user = new User(name, email,password);
     // Retrieve user by email
     const user = await User.getUserByEmail(email);
     if (!user) {
-throw new Error("Email or password invalid")
+      throw new AppError(404,"Email or password invalid")
     }
    const isPasswordMatch=await user.checkPasswordHash(password)
    if (!isPasswordMatch) {
-    throw new Error("Email or password invalid")
+    throw new AppError(404,"Email or password invalid")
         }
         //generate token
-         signJwt({id:this.id},jwtSecret,{expiresIn:'1h'});
+        const token = await user.generateToken()
+        const response = {
+          message:"Login successful!",
+           token,
+        }
+        res.json(response)
   }
 async function getAllUsers(req, res, next) {
   try{
