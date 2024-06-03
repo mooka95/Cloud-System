@@ -3,30 +3,22 @@ const pool = require('../db');
 const { v4: uuidv4 } = require('uuid');
 const {virtualMachinesQueryList} = require('../Queries/virtualmachine.queries')
 class VirtualMachine {
-  constructor(hostName, operatingSystem, userIdentifier, isActive = false) {
+  constructor(hostName, operatingSystem, isActive = false) {
     this.hostName = hostName;
     this.operatingSystem = operatingSystem;
-    this.userIdentifier = userIdentifier;
     this.isActive = isActive;
     this.identifier = uuidv4();
   }
 
-  async insertVirtualMachine() {
-    const query = `INSERT INTO virtual_machines (hostname, isactive, operatingsystem, userid, identifier)
-                   VALUES ($1, $2, $3, $4, $5) RETURNING id`;
-    try {
-      const res = await pool.query(query, [this.hostName, this.isActive, this.operatingSystem, this.userIdentifier, this.identifier]);
-      console.log('Data inserted successfully!');
-      return res.rows[0].id;
-    } catch (err) {
-      console.error('Error inserting data', err);
-      throw err;
-    }
-  }
 
-  static async getAllVirtualMachines(userId) {
-      const res = await pool.query(virtualMachinesQueryList["GET_All_VirtualMachines"]);
+
+  static async getAllVirtualMachines(user) {
+      const res = await pool.query(virtualMachinesQueryList["GET_All_VirtualMachines"],[user.id]);
       return res.rows;
+  }
+   async addVirtualMachine(user) {
+      const response = await pool.query(virtualMachinesQueryList["insertVirtualMachine"],[this.hostName,this.isActive,this.operatingSystem,user.id,this.identifier]);
+      return response.rows[0].identifier || false;
   }
 
   static async getVirtualMachineByID(identifier, userId) {

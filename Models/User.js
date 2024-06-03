@@ -3,10 +3,12 @@ const { saltRounds,jwtSecret }=require('../Config');
 const usersQuery=require('../Queries/user.queries')
 const database = require("../db")
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 // const signJwt=util.promisify(jwt.sign);
 class User {
-    id 
-    constructor(email, password, firstName, lastName) {
+    
+    constructor(id,email, password, firstName, lastName) {
+        this.id = id
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -25,11 +27,36 @@ class User {
         if(!user){
             return null
         }
-                return new User(user.email, user.password, user.first_name, user.last_name)
+        
+                return new User(user.id,user.email, user.password, user.first_name, user.last_name)
 
     }
-    async generateToken(){
-        return jwt.sign({id:this.id},jwtSecret,{expiresIn:'2h'});
+    static async getUserById(id){
+        const result = await database.query(usersQuery.queryList['GET_User_ById_Query'], [id]); // Assuming you have a constant named getUserByEmail in your queries module
+        const user = result.rows[0]||null;
+        if(!user){
+            return null
+        }
+        
+                return new User(user.id,user.email, user.password, user.first_name, user.last_name)
+
+    }
+    static async getUserByToken(token){
+        const {user}= await jwt.verify(token,jwtSecret);
+        const userData =await this.getUserById(user.id);
+        return userData;
+
+    }
+    async generateToken(id){
+       const accessTokenExpires = moment().add(120, 'minutes')
+        const payload = {
+            user: {id},
+            sub:id,
+            iat: moment().unix(),
+            exp: accessTokenExpires.unix(),
+          }
+        
+          return jwt.sign(payload, jwtSecret)
     }
 }
 module.exports = User

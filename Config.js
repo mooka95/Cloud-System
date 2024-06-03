@@ -1,12 +1,5 @@
 require('dotenv').config();
 
-// const requiredEnvs=['host','user','database'];
-// const missingEnvs=requiredEnvs.filter(envName => !process.env[envName]);
-// if(missingEnvs.length){
-//    throw new Error(`missing required envs ${missingEnvs}`)
-// }
-
-
 
 
 

@@ -30,7 +30,7 @@ const user = new User(name, email,password);
     throw new AppError(404,"Email or password invalid")
         }
         //generate token
-        const token = await user.generateToken()
+        const token = await user.generateToken(user.id)
         const response = {
           message:"Login successful!",
            token,

@@ -5,11 +5,11 @@ const jwtOptions = {
     secretOrKey: config.jwtSecret,
     jwtFromRequest: ExtractJwt.fromExtractors([
       ExtractJwt.fromHeader('Authorization'),
-      ExtractJwt.fromAuthHeaderAsBearerToken(),
     ]),
   }
 
   const jwtVerify = async (payload, done) => {
+    console.log("i am in verify")
     try {
       if (payload.user) {
         done(null, payload.user)
