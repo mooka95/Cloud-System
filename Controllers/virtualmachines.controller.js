@@ -17,10 +17,31 @@ async function  createNewVirtualMachine(req,res){
 
     res.status(200).json({"message":"virtualMachine created Successfully", "vmId": virtualMachineId});
 }
+async function deleteVirtualMachine(req,res){
+//get
+const vmDb = await VirtualMachine.getVirtualMachineByID(req.params.id,req.user.id)
+if(!vmDb){
+    throw new AppError(404, 'VirtualMachine Not Exists on Your Account')
+}
+const virtualMachine = new VirtualMachine(vmDb.hostname,vmDb.operating_system,vmDb.is_active, vmDb.identifier)
+ await virtualMachine.deleteVirtualMachine()
+res.status(200).json({"message":"VirtualMachine deleted successfully!"});
+}
+async function activateVirtualMachine(req,res){
+    const vmDb = await VirtualMachine.getVirtualMachineByID(req.params.id,req.user.id)
+    if(!vmDb){
+        throw new AppError(404, 'VirtualMachine Not Exists on Your Account')
+    }
+    const virtualMachine = new VirtualMachine(vmDb.hostname,vmDb.operating_system,vmDb.is_active, vmDb.identifier)
+    await virtualMachine.updateVirtualMachineActiveState(true)
+    res.status(200).json({"message":"VirtualMachine Activated successfully!"});
+}
 
 
 
 module.exports ={
     getAllVirtualMachines,
     createNewVirtualMachine,
+    deleteVirtualMachine,
+    activateVirtualMachine,
 }

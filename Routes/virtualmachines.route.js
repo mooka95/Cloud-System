@@ -2,7 +2,14 @@ const { Router } = require('express')
 const asyncExec = require('../Utils/async')
 const virtualMachineController = require('../Controllers/virtualmachines.controller')
 const authenticate= require("../Middlewares/Authenticate")
+const validateVirtualMachine = asyncExec(async (req, res, next) => {
+    return req.validate(req.validations.addVirtualMachine)(req, res, next)
+  })
+const validateDeleteVirtualMachine = asyncExec(async (req, res, next) => {
+    return req.validate(req.validations.deleteVirtualMachine)(req, res, next)
+  })
 module.exports = Router({ mergeParams: true })
-
 .get('/virtualmachines',authenticate,asyncExec(virtualMachineController.getAllVirtualMachines))
-.post('/virtualmachines',authenticate,asyncExec(virtualMachineController.createNewVirtualMachine))
+.post('/virtualmachines',authenticate,validateVirtualMachine,asyncExec(virtualMachineController.createNewVirtualMachine))
+.delete('/virtualmachines/:id',authenticate,validateDeleteVirtualMachine,asyncExec(virtualMachineController.deleteVirtualMachine))
+.patch('/virtualmachines/power/active/:id',authenticate,asyncExec(virtualMachineController.activateVirtualMachine))

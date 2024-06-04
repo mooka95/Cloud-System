@@ -42,9 +42,14 @@ class User {
 
     }
     static async getUserByToken(token){
-        const {user}= await jwt.verify(token,jwtSecret);
-        const userData =await this.getUserById(user.id);
-        return userData;
+        try{
+
+            const {user}= await jwt.verify(token,jwtSecret);
+            const userData =await this.getUserById(user.id);
+            return userData;
+        }catch(err){
+         return false
+        }
 
     }
     async generateToken(id){
