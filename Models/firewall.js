@@ -1,5 +1,6 @@
 const pool = require('../db');
 const { v4: uuidv4 } = require('uuid');
+const {firewallQueryList} = require('../Queries/firewall.queries')
 class Firewall{
 constructor(id,name,identifier){
     this.id=id
@@ -17,6 +18,10 @@ static async getFirewallByID(identifier, userId) {
     }
   }
 
+  static async getAllFirewalls(user) {
+    const res = await pool.query(firewallQueryList["GET_All_firewalls"],[user.id]);
+    return res.rows||false;
+  }
 }
 
 module.exports = Firewall;

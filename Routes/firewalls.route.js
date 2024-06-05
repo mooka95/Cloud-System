@@ -1,0 +1,6 @@
+const { Router } = require('express')
+const asyncExec = require('../Utils/async')
+const firewallController = require('../Controllers/firewall.controller')
+const authenticate= require("../Middlewares/Authenticate")
+module.exports = Router({ mergeParams: true })
+.get('/firewall',authenticate,asyncExec(firewallController.getAllFirewalls))
