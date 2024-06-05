@@ -45,7 +45,14 @@ async function deactivateVirtualMachine(req,res){
     await virtualMachine.updateVirtualMachineActiveState(false)
     res.status(200).json({"message":"VirtualMachine Deactivated successfully!"});
 }
-
+async function getVirtualMachineById(req,res){
+    const vmDb = await VirtualMachine.getVirtualMachineByID(req.params.id,req.user.id)
+    if(!vmDb){
+        throw new AppError(404, 'VirtualMachine Not Exists on Your Account')
+    }
+    const virtualMachine = new VirtualMachine(vmDb.hostname,vmDb.operating_system,vmDb.is_active, vmDb.identifier)
+    res.status(200).json( virtualMachine);
+}
 
 
 module.exports ={
@@ -54,4 +61,5 @@ module.exports ={
     deleteVirtualMachine,
     activateVirtualMachine,
     deactivateVirtualMachine,
+    getVirtualMachineById,
 }

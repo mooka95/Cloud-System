@@ -10,6 +10,7 @@ const validateDeleteVirtualMachine = asyncExec(async (req, res, next) => {
   })
 module.exports = Router({ mergeParams: true })
 .get('/virtualmachines',authenticate,asyncExec(virtualMachineController.getAllVirtualMachines))
+.get('/virtualmachine/:id',authenticate,asyncExec(virtualMachineController.getVirtualMachineById))
 .post('/virtualmachines',authenticate,validateVirtualMachine,asyncExec(virtualMachineController.createNewVirtualMachine))
 .delete('/virtualmachines/:id',authenticate,validateDeleteVirtualMachine,asyncExec(virtualMachineController.deleteVirtualMachine))
 .patch('/virtualmachines/power/active/:id',authenticate,asyncExec(virtualMachineController.activateVirtualMachine))
