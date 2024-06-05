@@ -1,4 +1,5 @@
 const VirtualMachine = require('../Models/VirtualMachine');
+const Firewall = require('../Models/firewall')
 const AppError = require('../Utils/AppError');
 
 async function  getAllVirtualMachines(req,res){
@@ -53,6 +54,31 @@ async function getVirtualMachineById(req,res){
     const virtualMachine = new VirtualMachine(vmDb.hostname,vmDb.operating_system,vmDb.is_active, vmDb.identifier)
     res.status(200).json( virtualMachine);
 }
+async function attachVirtualMachineToFirewall(req,res){
+    const vmDb = await VirtualMachine.getVirtualMachineByID(req.body.virtualmachineId,req.user.id)
+    if(!vmDb){
+        throw new AppError(404, 'VirtualMachine Not Exists on Your Account')
+    }
+    const firewallDb = await Firewall.getFirewallByID(req.body.firewallId,req.user.id)
+    if(!firewallDb){
+        throw new AppError(404, 'Firewall Not Exists on Your Account')
+    }
+    const virtualMachine = new VirtualMachine(vmDb.hostname,vmDb.operating_system,vmDb.is_active, vmDb.identifier)
+    virtualMachine.id = vmDb.id
+    const firewall = new Firewall(firewallDb.id,firewallDb.name,firewallDb.identifier)
+    //check if virtualMachine attached to this firewall
+const virtualMachineFirewall = await virtualMachine.getFirewallAttachedToVirtualMachine(firewall.id)
+if(virtualMachineFirewall){
+    throw new AppError(409, 'VirtualMachine Already attached To Firewall')
+}
+    //attach firewallToVM
+    const attachId = await virtualMachine.attachVirtualMachineToFirewall(firewall.id)
+    if(!attachId){
+        throw new AppError(500, 'cannot attach firewall to virtualmachine')
+    }
+    res.status(200).json({"message":"VirtualMachine attached to firewall successfully!"});
+
+}
 
 
 module.exports ={
@@ -62,4 +88,5 @@ module.exports ={
     activateVirtualMachine,
     deactivateVirtualMachine,
     getVirtualMachineById,
+    attachVirtualMachineToFirewall,
 }

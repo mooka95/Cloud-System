@@ -8,6 +8,9 @@ const validateVirtualMachine = asyncExec(async (req, res, next) => {
 const validateDeleteVirtualMachine = asyncExec(async (req, res, next) => {
     return req.validate(req.validations.deleteVirtualMachine)(req, res, next)
   })
+const validateAttachFirewall = asyncExec(async (req, res, next) => {
+    return req.validate(req.validations.attachFirewall)(req, res, next)
+  })
 module.exports = Router({ mergeParams: true })
 .get('/virtualmachines',authenticate,asyncExec(virtualMachineController.getAllVirtualMachines))
 .get('/virtualmachine/:id',authenticate,asyncExec(virtualMachineController.getVirtualMachineById))
@@ -15,3 +18,4 @@ module.exports = Router({ mergeParams: true })
 .delete('/virtualmachines/:id',authenticate,validateDeleteVirtualMachine,asyncExec(virtualMachineController.deleteVirtualMachine))
 .patch('/virtualmachines/power/active/:id',authenticate,asyncExec(virtualMachineController.activateVirtualMachine))
 .patch('/virtualmachines/:id/power/deactivate',authenticate,asyncExec(virtualMachineController.deactivateVirtualMachine))
+.post('/virtualmachines/firewall/attach',authenticate,validateAttachFirewall,asyncExec(virtualMachineController.attachVirtualMachineToFirewall))

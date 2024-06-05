@@ -3,6 +3,7 @@ const pool = require('../db');
 const { v4: uuidv4 } = require('uuid');
 const {virtualMachinesQueryList} = require('../Queries/virtualmachine.queries')
 class VirtualMachine {
+  id
   constructor(hostName, operatingSystem, isActive = false,identifier) {
     this.hostName = hostName;
     this.operatingSystem = operatingSystem;
@@ -51,17 +52,23 @@ class VirtualMachine {
   }
 
   async attachVirtualMachineToFirewall(firewallId) {
-    const query = `INSERT INTO firewall_virtual_machines (virtual_machine_id, firewall_id, identifier)
-                   VALUES ($1, $2, $3) RETURNING id`;
-    try {
-      const res = await pool.query(query, [this.identifier, firewallId, uuidv4()]);
-      console.log('Data inserted successfully!');
-      return res.rows[0].id;
-    } catch (err) {
-      console.error('Error inserting data', err);
-      throw err;
+    try{
+      const query = `INSERT INTO virtualmachines_firewalls (virtualmachine_id, firewall_id, identifier)
+                     VALUES ($1, $2, $3) RETURNING identifier`;
+        const res = await pool.query(query, [this.id, firewallId, uuidv4()]);
+        return res.rows[0].identifier || false;
+
+    }catch(error){
+return false
     }
   }
+  async getFirewallAttachedToVirtualMachine(firewallId) {
+      const query = `SELECT * FROM   virtualmachines_firewalls WHERE firewall_id=$1 AND virtualmachine_id=$2`;
+        const res = await pool.query(query, [firewallId,this.id]);
+        return res.rows[0] || false;
+  }
+  
 }
+
 
 module.exports = VirtualMachine;

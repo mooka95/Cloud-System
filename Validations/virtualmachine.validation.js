@@ -10,6 +10,14 @@ const addVirtualMachine = {
       .required(),
   }),
 }
+const attachFirewall = {
+  body: Joi.object().keys({
+    virtualmachineId: Joi.string()
+      .required(),
+      firewallId: Joi.string()
+      .required(),
+  }),
+}
 const deleteVirtualMachine = {
     params: Joi.object()
     .options({ abortEarly: true })
@@ -21,4 +29,5 @@ const deleteVirtualMachine = {
 module.exports = {
     addVirtualMachine,
     deleteVirtualMachine,
+    attachFirewall,
   }
