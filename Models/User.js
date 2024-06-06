@@ -4,7 +4,7 @@ const usersQuery=require('../Queries/user.queries')
 const database = require("../db")
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-// const signJwt=util.promisify(jwt.sign);
+const { v4: uuidv4 } = require('uuid');
 class User {
     
     constructor(id,email, password, firstName, lastName) {
@@ -16,6 +16,12 @@ class User {
       }
     async hashPassword(){
         this.password = await bcrypt.hash(this.password,saltRounds);
+    }
+    async addUser(){
+       const sqlStatement = `INSERT INTO users (email, password,first_name, last_name, identifier) VALUES ($1, $2,$3,$4, $5) RETURNING identifier,id`
+        const result = await database.query(sqlStatement, [this.email,this.password,this.firstName,this.lastName,uuidv4()]); // Assuming you have a constant named getUserByEmail in your queries module
+        this.id=result.rows[0].id
+        return result.rows[0].identifier||null;
     }
     async checkPasswordHash(requestedPassword){
         const isMatch = await bcrypt.compare(requestedPassword, this.password);

@@ -2,16 +2,19 @@ const User=require('../Models/User');
 const database=require('../db');
 const usersQuery=require('../Queries/user.queries');
 const AppError = require("../Utils/AppError")
+const Address = require('../Models/Address')
 
 async function registerUser(req, res, next) {
   try{
     // Your implementation here
-    const {name,email, password} = req.body.user
-const user = new User(name, email,password);
-   await user.hashpassword()
+    const {email, password,street,city,country,firstName,lastName} = req.body
+const user = new User(null,email,password,firstName,lastName);
+   await user.hashPassword()
    //inserting data to database
-    await database.query(usersQuery.queryList.SAVE_USER_QUERY,[user.name,user.email,user.password])
-   res.status(201).send("New User Added Successfully ");
+   const userIdentifier = await user.addUser()
+   const address = await new Address(street,city,country)
+   await address.addAddress(user.id)
+   res.status(201).send({"message":"User created Successfully", "userIdentifier": userIdentifier});
   }catch(error){
     next(error)
   }
