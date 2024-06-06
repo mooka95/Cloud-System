@@ -28,7 +28,6 @@ class VirtualMachine {
       const res = await pool.query(query, [identifier, userId]);
       return res.rows[0] ||false;
     } catch (err) {
-      console.error('Error fetching data', err);
       throw err;
     }
   }
@@ -67,6 +66,11 @@ return false
         const res = await pool.query(query, [firewallId,this.id]);
         return res.rows[0] || false;
   }
+  // async insertVirtualMachine(user) {
+  //   const response = await pool.query(virtualMachinesQueryList["insertVirtualMachine"],[this.hostName,this.isActive,this.operatingSystem,user.id,uuidv4()]);
+  //       const res = await pool.query(query, [firewallId,this.id]);
+  //       return res.rows[0] || false;
+  // }
   
 }
 

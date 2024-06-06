@@ -22,6 +22,11 @@ static async getFirewallByID(identifier, userId) {
     const res = await pool.query(firewallQueryList["GET_All_firewalls"],[user.id]);
     return res.rows||false;
   }
+   async deleteFirewall() {
+    const query = `DELETE FROM firewalls WHERE identifier = $1`;
+    await pool.query(query, [this.identifier]);
+     
+  }
 }
 
 module.exports = Firewall;

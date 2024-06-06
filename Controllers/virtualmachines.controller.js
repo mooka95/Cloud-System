@@ -13,7 +13,7 @@ async function  createNewVirtualMachine(req,res){
 
     const virtualMachineId = await virtualMachine.addVirtualMachine(req.user,req.body)
     if(!virtualMachineId){
-   throw new AppError(500,'Could not create virtual machine. Try again later')
+   throw new AppError(400,'Could not create virtual machine. Try again later')
     }
 
     res.status(200).json({"message":"virtualMachine created Successfully", "vmId": virtualMachineId});
