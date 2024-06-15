@@ -31,6 +31,15 @@ class VirtualMachine {
       throw err;
     }
   }
+   async getVirtualMachineByHostName() {
+    const query = `SELECT * FROM virtualmachines WHERE hostname = $1`;
+    try {
+      const res = await pool.query(query, [this.hostName]);
+      return res.rows.length>0||false;
+    } catch (err) {
+      throw err;
+    }
+  }
 
   async deleteVirtualMachine() {
     const query = `DELETE FROM virtualmachines WHERE identifier = $1`;

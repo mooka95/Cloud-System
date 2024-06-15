@@ -40,8 +40,6 @@ app.use((err,req,res,next)=>{
     message:handleError,
     errors:err.errors ||{}
   });
- 
-
 })
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

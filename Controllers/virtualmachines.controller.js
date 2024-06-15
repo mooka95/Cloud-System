@@ -10,13 +10,16 @@ async function  getAllVirtualMachines(req,res){
 async function  createNewVirtualMachine(req,res){
     const {hostname,isActive,OperatingSystem} =req.body
     const virtualMachine = new VirtualMachine(hostname,OperatingSystem,isActive)
-
+    const isVirtualMachineHostNameExist  = await virtualMachine.getVirtualMachineByHostName()
+    if(isVirtualMachineHostNameExist){
+        throw new AppError(400,'VirtualMAchine hostName Already Exist')     
+    }
     const virtualMachineId = await virtualMachine.addVirtualMachine(req.user,req.body)
     if(!virtualMachineId){
    throw new AppError(400,'Could not create virtual machine. Try again later')
     }
 
-    res.status(200).json({"message":"virtualMachine created Successfully", "vmId": virtualMachineId});
+    res.status(201).json({"message":"virtualMachine created Successfully", "vmId": virtualMachineId});
 }
 async function deleteVirtualMachine(req,res){
 //get
