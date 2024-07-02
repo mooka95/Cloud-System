@@ -8,6 +8,11 @@ async function registerUser(req, res, next) {
   try{
     // Your implementation here
     const {email, password,street,city,country,firstName,lastName} = req.body
+    // check that user email exists 
+  const isUserAlreadyExist = await  User.getUserByEmail(email)
+  if(isUserAlreadyExist){
+    throw new AppError(409,'An account with this email address already exists. Please try logging in or use a different email to register')
+  }
 const user = new User(null,email,password,firstName,lastName);
    await user.hashPassword()
    //inserting data to database

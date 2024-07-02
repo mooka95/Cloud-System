@@ -75,11 +75,6 @@ return false
         const res = await pool.query(query, [firewallId,this.id]);
         return res.rows[0] || false;
   }
-  // async insertVirtualMachine(user) {
-  //   const response = await pool.query(virtualMachinesQueryList["insertVirtualMachine"],[this.hostName,this.isActive,this.operatingSystem,user.id,uuidv4()]);
-  //       const res = await pool.query(query, [firewallId,this.id]);
-  //       return res.rows[0] || false;
-  // }
   
 }
 
