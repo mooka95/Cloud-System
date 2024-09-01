@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 const config = {
-  connectionString: 'postgres://postgres:Torm22torm*@localhost:5432/cloudsystem?sslmode=disable',
+  connectionString: 'postgres://postgres:Torm22torm*@localhost:5432/CloudSystem?sslmode=disable',
   max: 10, // Set the maximum number of connections in the pool
   idleTimeoutMillis: 30000, // Set the maximum idle time (30 seconds)
   connectionTimeoutMillis: 2000, // Set the maximum wait time for a new connection (2 seconds)

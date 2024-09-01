@@ -17,8 +17,8 @@ const user = new User(null,email,password,firstName,lastName);
    await user.hashPassword()
    //inserting data to database
    const userIdentifier = await user.addUser()
-   const address = await new Address(street,city,country)
-   await address.addAddress(user.id)
+  //  const address = await new Address(street,city,country)
+  //  await address.addAddress(user.id)
    res.status(201).send({"message":"User created Successfully", "userIdentifier": userIdentifier});
   }catch(error){
     next(error)

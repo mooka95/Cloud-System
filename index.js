@@ -8,6 +8,7 @@ const router = require('./Routes/router')()
 const validate = require('./Middlewares/validate')
 const validations = require('./Validations')
 var cors = require('cors')
+const orm=require('./orm')
 app.use(cors())
 app.use(express.json());
 

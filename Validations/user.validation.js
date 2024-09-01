@@ -14,9 +14,6 @@ const registerUser = {
       password: Joi.string().required(),
       firstName: Joi.string().required().allow(),
       lastName: Joi.string().required(),
-      street: Joi.string().required(),
-      city: Joi.string().required(),
-      country: Joi.string().required(),
   }),
 }
 
